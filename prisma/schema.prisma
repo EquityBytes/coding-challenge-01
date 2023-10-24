@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Address {
+  id String @id
+
+  label String?
+
+  address_line_1 String
+  address_line_2 String
+  zip_code       String
+  city           String
+  county         String?
+  country        String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  DeliveriesFrom Delivery[] @relation("From")
+  DeliveriesTo   Delivery[] @relation("To")
+}
+
+model Article {
+  id String @id
+
+  name String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  Deliveries Delivery[]
+}
+
+model Delivery {
+  id Int @id @default(autoincrement())
+
+  status String @default("DRAFT") //? DRAFT, PENDING, FULFILLED, CANCELLED
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  from_id String
+  From    Address @relation("From", fields: [from_id], references: [id])
+
+  to_id String
+  To    Address @relation("To", fields: [to_id], references: [id])
+
+  Articles Article[]
+
+  Webhook Webhook?
+}
+
+model Webhook {
+  url String @id
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  delivery_id Int      @unique
+  Delivery    Delivery @relation(fields: [delivery_id], references: [id])
+}
