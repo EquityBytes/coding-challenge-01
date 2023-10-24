@@ -13,7 +13,6 @@ Locations:
 
 Deliverables:
 
-- Spend approximately 30 minutes getting to know the codebase.
 - Create an architecture diagram of the stack including HTTP flows.
 - Implement outstanding backend TODOS to complete functionality.
 - List possible improvements to both UX, reliability & scalability.
